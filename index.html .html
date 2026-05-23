@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盛昊隆 | 视觉设计与新媒体专家</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#0f0f0f',
+                            gray: '#888888',
+                            light: '#fafafa'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 自定义文本选中颜色 */
+        ::selection {
+            background-color: #0f0f0f;
+            color: #ffffff;
+        }
+
+        /* 基础排版与背景 */
+        body {
+            background-color: #ffffff;
+            color: #0f0f0f;
+            overflow-x: hidden;
+        }
+
+        /* 进场渐显动画 */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* 链接悬浮线条动效 */
+        .hover-line {
+            position: relative;
+            display: inline-block;
+        }
+        .hover-line::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        .hover-line:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* 图片视差与悬浮容器 */
+        .img-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .img-parallax {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+        }
+        
+        .img-container:hover .img-parallax {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        /* AI Chat Widget 样式 */
+        #ai-chat-widget {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: bottom right;
+        }
+        
+        #ai-chat-widget.hidden-chat {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            pointer-events: none;
+        }
+        
+        .chat-message {
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background-color: currentColor;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-black selection:text-white">
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 text-brand-black p-5 md:px-10 flex justify-between items-center transition-all duration-300" id="navbar">
+        <a href="#" class="font-black text-2xl tracking-tighter hover-line">盛.</a>
+        <div class="hidden md:flex gap-10 text-sm font-medium tracking-wide">
+            <a href="#about" class="hover-line">关于我</a>
+            <a href="#skills" class="hover-line">专业技能</a>
+            <a href="#portfolio" class="hover-line">视觉作品</a>
+            <a href="#experience" class="hover-line">工作经历</a>
+        </div>
+        <a href="#contact" class="text-sm font-bold bg-brand-black text-white rounded-full px-6 py-2.5 hover:bg-gray-800 transition-colors duration-300">
+            联系方式
+        </a>
+    </nav>
+
+    <!-- 首屏：个人形象与核心定位 -->
+    <header class="min-h-screen flex flex-col justify-center px-6 md:px-20 pt-28 pb-12 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            
+            <!-- 左侧文本区 -->
+            <div class="order-2 lg:order-1">
+                <div class="inline-block px-4 py-1.5 border border-gray-200 rounded-full text-xs font-bold tracking-widest text-brand-gray mb-8 reveal-up">
+                    视觉全栈 × 新媒体操盘
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tight leading-[1.1] reveal-up delay-100" id="hero-title">
+                    盛昊隆
+                </h1>
+                <h2 class="text-2xl md:text-3xl font-light text-brand-gray mt-6 mb-10 reveal-up delay-200">
+                    高级UI视觉设计师 <br>
+                    <span class="text-brand-black font-medium">新媒体运营总监</span>
+                </h2>
+                <p class="text-base md:text-lg text-gray-600 leading-relaxed font-medium max-w-lg mb-12 reveal-up delay-300">
+                    深耕大型主流媒体平台设计标准与全域新媒体矩阵运营。<br>具备从品牌视觉定位到全域流量增长、落地执行的全案操盘能力，审美与专业度双在线。
+                </p>
+                <div class="reveal-up delay-300">
+                    <a href="#about" class="inline-flex items-center gap-3 text-sm font-bold tracking-widest hover:gap-5 transition-all duration-300">
+                        向下滚动探索
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4L12 20M12 20L18 14M12 20L6 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 右侧个人形象展示区 -->
+            <div class="order-1 lg:order-2 relative reveal-up">
+                <div class="img-container rounded-3xl h-[60vh] lg:h-[75vh] w-full shadow-2xl relative">
+                    <!-- 使用高品质占位图代表个人形象，悬浮时从黑白变为彩色 -->
+                    <img src="https://i.imgs.ovh/2026/05/23/c5d39809e757c00705cf6481741619ae.png" 
+                         alt="盛昊隆个人形象" 
+                         class="img-parallax w-full h-full object-cover grayscale"
+                         id="hero-image">
+                         
+                    <!-- 浮动信息卡片 -->
+    
+                
+                <!-- 装饰背景 -->
+                <div class="absolute -z-10 right-0 top-1/2 -translate-y-1/2 w-[40vw] h-[40vw] bg-gray-100 rounded-full blur-3xl opacity-60"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 个人简介 -->
+    <section id="about" class="py-24 md:py-32 px-6 md:px-20 bg-brand-light relative">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-xs font-bold tracking-[0.2em] text-brand-gray mb-12 reveal-up">01. 个人简介</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+                <div class="lg:col-span-8 reveal-up">
+                    <p class="text-2xl md:text-4xl font-medium leading-[1.6] tracking-tight">
+                        我是1995年出生，拥有高级UI设计与知名文旅景区新媒体主管双重资深从业经验，是行业稀缺的
+                        <span class="text-brand-gray">视觉设计 + 新媒体运营</span> 双栖复合型人才。
+                    </p>
+                </div>
+                
+                <div class="lg:col-span-4 flex flex-col gap-6 font-medium text-lg reveal-up delay-100">
+                    <div class="border-b border-gray-300 pb-4 hover:pl-4 transition-all duration-300">
+                        <span class="text-brand-gray text-sm block mb-1">现居地</span>
+                        内蒙古鄂尔多斯市东胜区
+                    </div>
+                    <div class="border-b border-gray-300 pb-4 hover:pl-4 transition-all duration-300">
+                        <span class="text-brand-gray text-sm block mb-1">学历及年龄</span>
+                        本科学历 / 1995年出生
+                    </div>
+                    <div class="border-b border-gray-300 pb-4 hover:pl-4 transition-all duration-300">
+                        <span class="text-brand-gray text-sm block mb-1">专业资质</span>
+                        专业平面设计证书 / C1驾驶证
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业技能 -->
+    <section id="skills" class="py-24 md:py-40 px-6 md:px-20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-xs font-bold tracking-[0.2em] text-brand-gray mb-16 reveal-up">02. 核心职能</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+                <!-- 技能 1 -->
+                <div class="group cursor-default reveal-up">
+                    <div class="text-5xl font-black text-gray-100 mb-6 transition-colors duration-500 group-hover:text-brand-black">01</div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        视觉设计全栈能力
+                        <span class="w-8 h-px bg-brand-black transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-justify">
+                        持有专业平面设计证书，CAAC中型超视距机长，精通 UI 视觉设计、品牌 VI 系统、交互界面设计、平面宣传物料、文创视觉、海报展板设计等，具备从品牌视觉定位到落地执行的全案设计能力，深耕大型主流媒体平台设计标准，审美与专业度双在线。
+                    </p>
+                </div>
+                
+                <!-- 技能 2 -->
+                <div class="group cursor-default reveal-up delay-100">
+                    <div class="text-5xl font-black text-gray-100 mb-6 transition-colors duration-500 group-hover:text-brand-black">02</div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        新媒体全链路操盘
+                        <span class="w-8 h-px bg-brand-black transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-justify">
+                        精通抖音、视频号、公众号、小红书等全域新媒体平台矩阵运营，擅长内容定位、策划创作、流量运营、粉丝增长、品牌宣发推广，熟悉文旅 + 主流政务平台双赛道传播逻辑。
+                    </p>
+                </div>
+
+                <!-- 技能 3 -->
+                <div class="group cursor-default reveal-up">
+                    <div class="text-5xl font-black text-gray-100 mb-6 transition-colors duration-500 group-hover:text-brand-black">03</div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        视频创作全流程执行
+                        <span class="w-8 h-px bg-brand-black transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-justify">
+                        独立完成创意策划、实景拍摄、剪辑包装、字幕配音、封面视觉、内容优化全环节，可一站式产出高品质宣发视频内容。
+                    </p>
+                </div>
+
+                <!-- 技能 4 -->
+                <div class="group cursor-default reveal-up delay-100">
+                    <div class="text-5xl font-black text-gray-100 mb-6 transition-colors duration-500 group-hover:text-brand-black">04</div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        综合管理执行能力
+                        <span class="w-8 h-px bg-brand-black transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-justify">
+                        具备团队协作统筹、多项目并行管控、跨部门沟通对接能力，持有 C1 驾驶证，适配外勤拍摄、外出执行、项目落地等全场景工作，抗压性与执行力极强。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视觉作品展示区 (带图片) -->
+    <section id="portfolio" class="py-24 px-6 md:px-20 bg-brand-light relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-16 reveal-up">
+                <div>
+                    <h2 class="text-xs font-bold tracking-[0.2em] text-brand-gray mb-4">03. 视觉作品与实操案例</h2>
+                    <h3 class="text-3xl md:text-5xl font-black tracking-tight">部分代表作品<span class="text-brand-gray">展示区</span></h3>
+                </div>
+            </div>
+
+            <!-- 图片网格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 作品 1: UI设计 -->
+                <div class="group reveal-up cursor-pointer" onclick="openPortfolioModal('主流媒体 UI 视觉全案', '在此项目中，我主导了大型电视媒体平台的视觉升级与UI交互设计。通过梳理品牌核心价值，重新定义了整体视觉规范，使其更符合现代审美的同时兼具主流媒体的稳重与权威感。项目涵盖了核心界面设计、视觉资产库建立与交互体验优化，有效提升了各终端视觉的一致性。', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop')">
+                    <div class="img-container rounded-2xl h-80 mb-6 shadow-md relative">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop" alt="UI界面设计作品" class="img-parallax w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <!-- 悬浮点击提示 -->
+                        <div class="absolute inset-0 bg-brand-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
+                            <span class="bg-white text-brand-black px-6 py-2.5 rounded-full text-sm font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                                点击查看详情
+                            </span>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 transition-colors group-hover:text-gray-600">主流媒体 UI 视觉全案</h4>
+                    <p class="text-sm text-brand-gray">UI 界面设计 / 交互优化 / 视觉规范</p>
+                </div>
+
+                <!-- 作品 2: 视频创作 -->
+                <div class="group reveal-up delay-100 cursor-pointer" onclick="openPortfolioModal('文旅景区全矩阵宣传视频', '作为景区唯一宣发主创，我独立负责了该系列宣传视频的全流程创作。从前期的脚本创意策划、分镜头设计，到中期的实景拍摄（含无人机航拍），再到后期的剪辑包装、色彩调校与配音字幕，实现了一站式高品质内容产出，视频在各平台累计获得数百万次曝光。', 'https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=1200&auto=format&fit=crop')">
+                    <div class="img-container rounded-2xl h-80 mb-6 shadow-md relative">
+                        <img src="https://i.imgs.ovh/2026/05/23/97ee42cff89f0b88ef483556f705ac8e.jpg" alt="宣传视频创作" class="img-parallax w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-brand-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
+                            <span class="bg-white text-brand-black px-6 py-2.5 rounded-full text-sm font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                                点击查看详情
+                            </span>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 transition-colors group-hover:text-gray-600">文旅景区全矩阵宣传视频</h4>
+                    <p class="text-sm text-brand-gray">策划拍摄 / 剪辑包装 / 宣发推广</p>
+                </div>
+
+                <!-- 作品 3: 平面/品牌设计 -->
+                <div class="group reveal-up delay-200 cursor-pointer" onclick="openPortfolioModal('全域品牌形象视觉包装', '针对景区年度大型节庆活动，提供全域视觉包装服务。从品牌Logo衍生设计、主KV海报延展，到线下导视系统、展板物料、文创周边设计。确保线上线下宣传物料的视觉统一，强化了品牌记忆点，为营销活动的高效转化提供了坚实的视觉支撑。', 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop')">
+                    <div class="img-container rounded-2xl h-80 mb-6 shadow-md relative">
+                        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" alt="品牌VI及平面物料" class="img-parallax w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-brand-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
+                            <span class="bg-white text-brand-black px-6 py-2.5 rounded-full text-sm font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                                点击查看详情
+                            </span>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 transition-colors group-hover:text-gray-600">全域品牌形象视觉包装</h4>
+                    <p class="text-sm text-brand-gray">品牌 VI 系统 / 海报物料 / 线下展板</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作经历 -->
+    <section id="experience" class="py-24 md:py-40 px-6 md:px-20 bg-brand-black text-white selection:bg-white selection:text-black">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-xs font-bold tracking-[0.2em] text-brand-gray mb-20 reveal-up">04. 工作履历</h2>
+            
+            <div class="flex flex-col gap-24 relative">
+                <!-- 左侧时间线 -->
+                <div class="absolute left-0 top-0 bottom-0 w-px bg-gray-800 hidden md:block"></div>
+
+                <!-- 经历 1 -->
+                <div class="relative md:pl-16 group reveal-up">
+                    <div class="absolute left-[-5px] top-3 w-2.5 h-2.5 rounded-full bg-white hidden md:block group-hover:scale-150 transition-transform duration-300 shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-16">
+                        <div class="lg:w-1/3">
+                            <h3 class="text-3xl font-bold mb-3">九城宫旅游区</h3>
+                            <p class="text-xl text-brand-gray mb-4">新媒体主管</p>
+                            <div class="flex items-center gap-3">
+                                <span class="inline-block px-3 py-1 text-xs border border-gray-700 rounded-full">至今</span>
+                                <span class="text-sm text-gray-500">内蒙古鄂尔多斯</span>
+                            </div>
+                        </div>
+                        <div class="lg:w-2/3">
+                            <ul class="flex flex-col gap-6 text-gray-300">
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">全面统筹景区全域品牌宣发与新媒体运营管理工作，搭建抖音、视频号、公众号、小红书等全媒体宣传矩阵，制定宣发计划，把控整体传播方向与品牌调性。</p>
+                                </li>
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">作为景区唯一宣发主创人员，独立负责景区全部宣传视频的全流程创作及景区全部平面视觉设计工作，统一整体品牌视觉形象。</p>
+                                </li>
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">衔接各部门宣传需求，统筹落地各类节庆营销活动，实现 "内容创作 + 视觉设计 + 平台运营 + 活动宣发" 闭环管理，大幅提升客流转化与口碑。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 经历 2 -->
+                <div class="relative md:pl-16 group reveal-up">
+                    <div class="absolute left-[-5px] top-3 w-2.5 h-2.5 rounded-full bg-white hidden md:block group-hover:scale-150 transition-transform duration-300 shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-16">
+                        <div class="lg:w-1/3">
+                            <h3 class="text-3xl font-bold mb-3">中国交通频道</h3>
+                            <p class="text-xl text-brand-gray mb-4">高级 UI 设计师</p>
+                            <span class="inline-block px-3 py-1 text-xs border border-gray-700 rounded-full text-gray-400">北京</span>
+                        </div>
+                        <div class="lg:w-2/3">
+                            <ul class="flex flex-col gap-6 text-gray-300">
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">负责主流电视媒体平台 UI 视觉全案设计，承接频道核心界面、品牌视觉、宣传专题等设计工作，严格把控广电系统视觉规范与传播标准。</p>
+                                </li>
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">协同编导、运营策划团队，完成各类专题栏目、公益宣传的视觉设计创意，保障内容贴合平台调性与主流价值传播方向，优化内部设计流程。</p>
+                                </li>
+                                <li class="flex gap-4">
+                                    <span class="text-white mt-1 opacity-50">✦</span>
+                                    <p class="leading-relaxed">深耕大型主流媒体，主导多项重大专题与栏目设计，凭借出色的视觉把控力与执行效率获评高级 UI 设计师，具备严谨的设计思维与大型项目操盘能力。</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心优势 -->
+    <section id="advantages" class="py-24 md:py-40 px-6 md:px-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <h2 class="text-xs font-bold tracking-[0.2em] text-brand-gray mb-16 reveal-up">05. 核心优势</h2>
+            
+            <div class="space-y-8">
+                <div class="group border-b border-gray-200 pb-8 cursor-default reveal-up">
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-12 transition-transform duration-300 group-hover:translate-x-4">
+                        <span class="text-sm font-bold text-gray-400 mt-1">01.</span>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-brand-black">双赛道顶级履历，行业背书极强</h3>
+                            <p class="text-gray-600 leading-relaxed pr-4">拥有主流电视媒体高级UI设计师 + 知名文旅景区新媒体主管双重核心履历，兼具大型平台设计规范经验与一线文旅运营操盘经验，适配中高层管理与核心技术岗。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group border-b border-gray-200 pb-8 cursor-default reveal-up delay-100">
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-12 transition-transform duration-300 group-hover:translate-x-4">
+                        <span class="text-sm font-bold text-gray-400 mt-1">02.</span>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-brand-black">复合型全能人才，无工作短板</h3>
+                            <p class="text-gray-600 leading-relaxed pr-4">集高级 UI 设计、平面视觉、全域新媒体、视频拍摄剪辑于一身，实现 "视觉设计+内容创作+平台运营+品牌宣发" 全链路闭环，一人可抵多岗，无需配合即可独立承接核心项目。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group border-b border-gray-200 pb-8 cursor-default reveal-up delay-200">
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-12 transition-transform duration-300 group-hover:translate-x-4">
+                        <span class="text-sm font-bold text-gray-400 mt-1">03.</span>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-brand-black">专业功底扎实，资质认证齐全</h3>
+                            <p class="text-gray-600 leading-relaxed pr-4">持有平面设计专业证书，受过大型主流媒体严苛设计标准历练，视觉审美、设计规范、内容把控能力远超行业平均水平，专业认可度极高。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group border-b border-gray-200 pb-8 cursor-default reveal-up delay-300">
+                    <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-12 transition-transform duration-300 group-hover:translate-x-4">
+                        <span class="text-sm font-bold text-gray-400 mt-1">04.</span>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-3 text-brand-black">实战执行力拉满，结果导向清晰</h3>
+                            <p class="text-gray-600 leading-relaxed pr-4">两段经历均为核心骨干岗位，擅长多任务并行、高压力攻坚，所有工作均以落地成果为导向，能直接为企业创造品牌与流量价值。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 背景装饰文字 -->
+        <div class="absolute -bottom-10 left-0 text-[12vw] font-black text-gray-50 -z-10 whitespace-nowrap select-none">
+            ADVANTAGES
+        </div>
+    </section>
+
+    <!-- 联系底部 -->
+    <footer id="contact" class="py-24 px-6 md:px-20 bg-brand-light text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto reveal-up relative z-10">
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8">
+                期待与您共创<br><span class="text-brand-gray">非凡商业价值</span>
+            </h2>
+            
+            <div class="flex flex-col items-center justify-center gap-4 mt-16">
+                <a href="tel:15701149178" class="text-3xl md:text-5xl font-bold hover-line transition-all duration-300 tracking-tight">157 0114 9178</a>
+                <p class="text-brand-gray mt-6 text-lg">内蒙古鄂尔多斯市东胜区</p>
+            </div>
+
+            <div class="mt-32 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center text-sm text-brand-gray font-medium">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> 盛昊隆 版权所有.</p>
+                <p class="mt-4 md:mt-0 tracking-widest text-xs">设计师作品集 / 个人简历</p>
+            </div>
+        </div>
+        
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-white/0 to-gray-100/50 -z-10"></div>
+    </footer>
+
+    <!-- 作品详情弹窗 -->
+    <div id="portfolio-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-all duration-300">
+        <!-- 背景遮罩 -->
+        <div class="absolute inset-0 bg-brand-black/70 backdrop-blur-sm cursor-pointer" onclick="closePortfolioModal()"></div>
+        <!-- 弹窗内容 -->
+        <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transform scale-95 transition-transform duration-300" id="portfolio-modal-content">
+            <!-- Header -->
+            <div class="flex justify-between items-center p-5 md:p-6 border-b border-gray-100 shrink-0">
+                <h3 class="text-xl font-bold" id="modal-title">作品详情</h3>
+                <button onclick="closePortfolioModal()" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors text-gray-500 hover:text-brand-black">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6L18 18"></path></svg>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="overflow-y-auto p-5 md:p-8 bg-brand-light flex-1">
+                <div class="bg-white p-2 rounded-2xl shadow-sm mb-6">
+                    <img id="modal-image" src="" class="w-full rounded-xl object-cover" alt="作品展示细节">
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm">
+                    <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 16H12V12H11M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        项目概览
+                    </h4>
+                    <p id="modal-desc" class="text-gray-600 leading-relaxed text-justify"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 助理悬浮按钮 -->
+    <button id="ai-chat-btn" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[60] bg-brand-black text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-gray-800 transition-all duration-300 group">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="group-hover:hidden">
+            <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.60553 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden group-hover:block">
+            <path d="M9 9L15 15M15 9L9 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="absolute -top-2 -right-2 flex h-4 w-4">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
+        </span>
+    </button>
+
+    <!-- AI 聊天面板 -->
+    <div id="ai-chat-widget" class="hidden-chat fixed bottom-24 right-6 md:bottom-28 md:right-10 z-[60] w-[calc(100vw-48px)] sm:w-96 bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden flex flex-col h-[500px] max-h-[70vh]">
+        
+        <!-- 头部 -->
+        <div class="bg-brand-black text-white p-5 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-white text-brand-black flex items-center justify-center font-bold text-sm">AI</div>
+                <div>
+                    <h3 class="font-bold text-sm">盛昊隆的 AI 助理</h3>
+                    <p class="text-[10px] text-gray-400">Powered by Gemini</p>
+                </div>
+            </div>
+            <button id="close-chat-btn" class="text-gray-400 hover:text-white transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 聊天记录区 -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-5 bg-brand-light flex flex-col gap-4 text-sm">
+            <!-- 欢迎消息 -->
+            <div class="flex gap-3 max-w-[85%] chat-message">
+                <div class="w-6 h-6 rounded-full bg-brand-black text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-1">AI</div>
+                <div class="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm shadow-sm text-gray-700 leading-relaxed">
+                    你好！我是盛昊隆的专属 AI 助理。关于他的专业技能、工作履历或项目经验，您有什么想了解的吗？
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入区 -->
+        <div class="p-4 bg-white border-t border-gray-100 shrink-0">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="输入您的问题..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-sm outline-none focus:border-brand-black focus:bg-white transition-colors" autocomplete="off" required>
+                <button type="submit" class="w-10 h-10 rounded-full bg-brand-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed" id="send-msg-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-1">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 滚动触发元素渐显动画
+            const revealElements = document.querySelectorAll('.reveal-up');
+            
+            const revealOptions = {
+                threshold: 0.1, 
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // observer.unobserve(entry.target); // 取消注释可让动画只播放一次
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // 2. 页面视差滚动特效
+            const heroTitle = document.getElementById('hero-title');
+            const heroImage = document.getElementById('hero-image');
+            const parallaxElements = document.querySelectorAll('.parallax-element');
+
+            window.addEventListener('scroll', () => {
+                let scrollY = window.pageYOffset;
+                
+                // 标题缓慢上移和淡出
+                if (heroTitle) {
+                    heroTitle.style.transform = `translateY(${scrollY * 0.3}px)`;
+                }
+
+                // 个人形象图片的细微视差
+            
+
+                // 浮动卡片视差
+                parallaxElements.forEach(el => {
+                    const speed = el.getAttribute('data-speed') || 0.1;
+                    el.style.transform = `translateY(${scrollY * speed}px)`;
+                });
+            });
+
+            // 5. 作品详情弹窗控制
+            window.openPortfolioModal = (title, desc, imgSrc) => {
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-desc').innerText = desc;
+                document.getElementById('modal-image').src = imgSrc;
+                
+                const modal = document.getElementById('portfolio-modal');
+                const modalContent = document.getElementById('portfolio-modal-content');
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                // 触发重绘以应用动画
+                void modal.offsetWidth;
+                
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            };
+
+            window.closePortfolioModal = () => {
+                const modal = document.getElementById('portfolio-modal');
+                const modalContent = document.getElementById('portfolio-modal-content');
+                
+                modal.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                document.body.style.overflow = '';
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300); // 等待动画结束
+            };
+
+            // 4. AI Chat Assistant Logic (Gemini API)
+            const chatBtn = document.getElementById('ai-chat-btn');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            const chatWidget = document.getElementById('ai-chat-widget');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const sendBtn = document.getElementById('send-msg-btn');
+
+            let isChatOpen = false;
+            let chatHistory = [];
+
+            // 切换聊天窗口可见性
+            const toggleChat = () => {
+                isChatOpen = !isChatOpen;
+                if (isChatOpen) {
+                    chatWidget.classList.remove('hidden-chat');
+                    chatInput.focus();
+                } else {
+                    chatWidget.classList.add('hidden-chat');
+                }
+            };
+
+            chatBtn.addEventListener('click', toggleChat);
+            closeChatBtn.addEventListener('click', toggleChat);
+
+            // 格式化文本（简单处理换行）
+            const formatText = (text) => {
+                return text.replace(/\n/g, '<br>');
+            };
+
+            // 添加消息到UI
+            const appendMessage = (role, text) => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `flex gap-3 max-w-[85%] chat-message ${role === 'user' ? 'ml-auto flex-row-reverse' : ''}`;
+                
+                const avatar = role === 'user' 
+                    ? `<div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-[10px] shrink-0 mt-1">U</div>`
+                    : `<div class="w-6 h-6 rounded-full bg-brand-black text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-1">AI</div>`;
+                
+                const bubbleClass = role === 'user'
+                    ? 'bg-brand-black text-white border border-brand-black p-3 rounded-2xl rounded-tr-sm shadow-sm leading-relaxed'
+                    : 'bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm shadow-sm text-gray-700 leading-relaxed';
+
+                msgDiv.innerHTML = `
+                    ${avatar}
+                    <div class="${bubbleClass}">${formatText(text)}</div>
+                `;
+                
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            // 添加加载指示器
+            const addTypingIndicator = () => {
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'typing-indicator';
+                msgDiv.className = `flex gap-3 max-w-[85%] chat-message`;
+                msgDiv.innerHTML = `
+                    <div class="w-6 h-6 rounded-full bg-brand-black text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-1">AI</div>
+                    <div class="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm shadow-sm text-gray-700 typing-indicator flex items-center gap-1 h-[46px]">
+                        <span></span><span></span><span></span>
+                    </div>
+                `;
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            const removeTypingIndicator = () => {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            };
+
+            // 调用 Gemini API
+            const fetchAIResponse = async (userText) => {
+                const apiKey = ""; // Leave blank as per instructions, canvas handles it.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                // 维护历史记录
+                chatHistory.push({ role: "user", parts: [{ text: userText }] });
+
+                // AI 人设指令
+                const systemPrompt = `你是盛昊隆（Sheng Haolong）的个人AI助理。
+                盛昊隆是一位高级UI视觉设计师和新媒体运营总监。
+                以下是他的基本信息：
+                - 出生：1995年
+                - 所在地：内蒙古鄂尔多斯市东胜区
+                - 学历/资质：本科学历，专业平面设计证书，C1驾驶证。
+                - 核心技能：视觉设计全栈能力（UI设计、品牌VI系统、海报展板设计等）、新媒体全链路操盘（抖音、视频号、小红书、公众号矩阵运营等）、视频创作全流程执行（策划、实景拍摄、剪辑包装）、综合管理执行能力。
+                - 工作经历：
+                  1. 九城宫旅游区 - 新媒体主管（至今）：统筹全域品牌宣发，负责宣传视频全流程创作及平面视觉设计，落地各类节庆营销活动。
+                  2. 中国交通频道（北京） - 高级UI设计师：负责主流电视媒体平台UI视觉全案设计，协同编导运营策划团队完成核心专题视觉。
+                - 核心优势：双赛道履历（大型主流媒体+一线文旅）、全栖复合型核心人才、专业功底扎实、实战执行力结果导向清晰。
+                请根据这些信息回答访客的问题。语气要专业、自信、热情，简洁明了，并且始终以盛昊隆AI助理的身份作答。如果被问及信息中没有的内容，请礼貌地建议访客直接联系盛昊隆本人（电话：15701149178）。绝不要编造不存在的工作经历或技能。使用中文回复。`;
+
+                const payload = {
+                    contents: chatHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                try {
+                    addTypingIndicator();
+                    sendBtn.disabled = true;
+                    chatInput.disabled = true;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    removeTypingIndicator();
+
+                    if (result.candidates && result.candidates.length > 0) {
+                        const aiText = result.candidates[0].content.parts[0].text;
+                        appendMessage('model', aiText);
+                        // 保存AI回复到历史记录
+                        chatHistory.push({ role: "model", parts: [{ text: aiText }] });
+                    } else {
+                        appendMessage('model', '抱歉，我现在遇到了一点网络波动，请稍后再试或直接拨打 15701149178 联系盛昊隆本人。');
+                    }
+                } catch (error) {
+                    removeTypingIndicator();
+                    appendMessage('model', '抱歉，系统暂时无法连接。您可以直接拨打电话 15701149178 与盛昊隆沟通。');
+                    console.error("Gemini API Error:", error);
+                } finally {
+                    sendBtn.disabled = false;
+                    chatInput.disabled = false;
+                    chatInput.focus();
+                }
+            };
+
+            // 处理表单提交
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userText = chatInput.value.trim();
+                if (!userText) return;
+
+                appendMessage('user', userText);
+                chatInput.value = '';
+                fetchAIResponse(userText);
+            });
+        });
+    </script>
+</body>
+</html>
